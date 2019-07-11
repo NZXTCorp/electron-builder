@@ -105,8 +105,9 @@ export class NsisUpdater extends BaseUpdater {
     }
 
     const callUsingElevation = () => {
-      _spawn(path.join(process.resourcesPath!!, "elevate.exe"), [options.installerPath].concat(args))
-        .catch(e => this.dispatchError(e))
+      if (!options.elevationHelper || !options.elevationHelper(options.installerPath, args))
+        _spawn(path.join(process.resourcesPath!!, "elevate.exe"), [options.installerPath].concat(args))
+          .catch(e => this.dispatchError(e))
     }
 
     if (options.isAdminRightsRequired) {
